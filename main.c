@@ -76,6 +76,18 @@ void dispayHangman(int nb_error)
     }
 }
 
+void DisplayMenu() {
+    printf("Welcome to the Hangman game.\nPress:\n- h for help\n- s to start\n- q to quit\n");
+}
+
+void Help() {
+    printf("Help\n");
+}
+
+void Quit() {
+    printf("Quit\n");
+}
+
 char *chooseWord()
 {
     return "test";
@@ -97,41 +109,26 @@ void displayWord(char *word, char *guessedLetters)
     printf("\n");
 }
 
-int main(int ac, char **av)
-{
-    printf("Welcome to the Hangman game.\nPress:\n- h for help\n- s to start\n- q to quit\n");
-    char c;
-
-    while (1)
-    { // boucle infinie jusqu'à ce quon quitte
-        printf("Enter a command: ");
-        scanf(" %c", &c); // l'espace avant %c mange tous les espaces blancs
-        if (c == 'h')
-        {
-            printf("Help\n");
-        }
-        else if (c == 's')
-        {
-            char wordToGuess[100];
-            char guessedLetters[27] = "";
-            char input[10];
-            int nbError = 0;
-            strcpy(wordToGuess, chooseWord());
-            printf("Start\n");
-            printf("Guess the word:\n");
-            displayWord(wordToGuess, guessedLetters);
-            while (1)
-            {
-                printf("Guess a letter (or 'quit' to quit): ");
-                scanf("%9s", input);
-                if (strcmp(input, "quit") == 0)
+int PlayGame() {
+    char wordToGuess[100];
+    char guessedLetters[27] = "";
+    char input[10];
+    int nbError = 0;
+    strcpy(wordToGuess, chooseWord());
+    printf("Start\n");
+    printf("Guess the word:\n");
+    displayWord(wordToGuess, guessedLetters);
+    while (1) {
+        printf("Guess a letter (or 'quit' to quit): ");
+        scanf("%9s", input);
+         if (strcmp(input, "quit") == 0)
                 {
                     break;
                 }
-                else if (strlen(input) == 1) // vérifiez que la saisie est une seule lettre
+                else if (strlen(input) == 1) // vérifie que la saisie est une seule lettre
                 {
                     char letter = input[0];
-                    // vérifiez si la lettre n'a pas déjà été devinée
+                    // vérifie si la lettre n'a pas déjà été devinée
                     if (strchr(guessedLetters, letter) == NULL)
                     {
                         strncat(guessedLetters, &letter, 1); // ajoute la lettre à guessedLetters
@@ -178,16 +175,30 @@ int main(int ac, char **av)
                 }
 
                 displayWord(wordToGuess, guessedLetters);
-            }
-        }
-        else if (c == 'q')
-        {
-            printf("Quit\n");
-            break;
-        }
-        else
-        {
-            printf("Unknown command\n");
+    }
+    return nbError;  // Return le nbr d'error
+}
+
+int main(int ac, char **av) {
+    DisplayMenu();
+    char c;
+
+    while (1) {
+        printf("Enter a command: ");
+        scanf(" %c", &c);
+        switch (c) {
+            case 'h':
+                Help();
+                break;
+            case 's':
+                PlayGame();
+                break;
+            case 'q':
+                Quit();
+                return 0;  // End the game
+            default:
+                printf("Unknown command\n");
+                break;
         }
     }
     return 0;
